@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!— Global site tag (gtag.js) - Google Analytics —>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-124515881-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-124515881-2');
+
+    </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title> نصب Docker روی Debian 10 - دست نوشته های یک تازه کار </title>
+    <meta name="description"
+          content="نحوه نصب Docker بر روی سیستم عامل محبوب  Debian 10"/>
+    <meta name="keywords"
+          content="لینوکس،لینوکس مشهد،آموزش,پایتون,پایتون مشهد,آموزش لینوکس,دیتابیس,آموزش دیتابیس,برنامه نویسی,linux,database,mysql,mariadb,datamart,galera cluster,apache,big data,dataware house,cluster,galera,percona,python,php,tutorial,debian,ubuntu,centos,arch linux,mashhad linux,iran linux,debian mashhad, docker, container, virtualization, linux"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!--    <link href="https://rawgit.com/richleland/pygments-css/master/github.css" rel="stylesheet" crossorigin="anonymous">-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+    body {
+      direction: rtl;
+    }
+    p {
+        font-size: 1.3em;
+        line-height: 1.5em;
+        text-align: justify;
+      }
+    pre {
+        direction: ltr;
+        border-left: 5px solid #6ce26c;
+      }
+    .panel-body ul li{
+        margin: 10px 0;
+    }
+    a {
+        color: #4608ad;
+      }
+    .panel-group .panel {
+        margin-bottom: 5px;
+    }
+    .panel-primary > .panel-heading {
+        background-color: #4608ad;
+    }
+    .navbar-default {
+        background-color: #4608ad;
+    }
+    .navbar-default .navbar-brand {
+        color: #ffffff;
+    }
+    .navbar-default .navbar-nav > li > a {
+        color: #ffffff;
+        font-size:initial;
+    }
+    .navbar-default .navbar-nav > li > a:hover{
+        color: #00ffd9;
+    }
+    .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:focus, .navbar-default .navbar-nav > .open > a:hover{
+        color: #4608ad;
+    }
+
+    .dropdown-menu{
+        background-color: #4608ad;
+        color:#ffffff;
+        font-size:initial;
+    }
+    .dropdown-menu > li > a{
+        color:#ffffff;
+        font-size:initial;
+    }
+    .dropdown-menu > li > a:hover{
+        color: #00ffd9;
+        background-color:#4608ad;
+    }
+
+    #back2Top {
+    width: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    z-index: 999;
+    display: none;
+    cursor: pointer;
+    -moz-transform: rotate(270deg);
+    -webkit-transform: rotate(270deg);
+    -o-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg);
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    background-color: #DDD;
+    text-align: center;
+    font-size: 30px;
+    text-decoration: none;
+    }
+    #back2Top:hover {
+        background-color: #DDF;
+        color: #000;
+    }
+
+
+    </style>
+</head>
+<body>
+
+<a id="top"></a>
+<div id="scroollto1"></div>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header navbar-right">
+            <a class="navbar-brand" href="/">دست نوشته های یک تازه کار</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            
+            
+            <li><a href="https://shgn.ir/about.html" title="درباره ما">درباره ما</a></li>
+            
+            <li><a href="https://shgn.ir/contacus.html" title="ارتباط با ما">ارتباط با ما</a></li>
+            
+            <li><a href="https://shgn.ir/links.html" title="لینک های مفید">لینک های مفید</a></li>
+            
+            <li><a href="https://shgn.ir/tag/database.html" title="دیتابیس">دیتابیس</a></li>
+            
+            <li><a href="https://shgn.ir/tag/linux.html" title="لینوکس">لینوکس</a></li>
+            
+            <li class="dropdown">
+                <a href="https://shgn.ir/tag/learn.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                   aria-expanded="false">آموزش <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="https://shgn.ir/tag/lpic1.html">دوره LPIC1</a></li>
+                </ul>
+            </li>
+            
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            
+    <div itemscope itemtype="http://schema.org/NewsArticle">
+    <meta itemscope itemprop="mainEntityOfPage"  itemType="https://schema.org/WebPage" itemid="http://https://shgn.ir/2020-08-15/installing_docker_on_debian.html"/>
+    <div class="page-header">
+      <h3 itemprop="name">نصب Docker روی Debian 10</h3>
+      
+      
+        <small>
+          <p class="text-right">
+            ارسال شده <span itemprop="author" itemscope itemtype="https://schema.org/Person">
+                توسط <span itemprop="name">سید سجاد شاهچراغیان</span>
+              </span>
+              در تاریخ <span itemprop="datePublished">2020-08-15</span>
+          </p>
+        </small>
+      
+    </div>
+      <section itemprop="articleBody">
+        <p>بعد از مدتها بالاخره با یک مطلب معمولی اما بسیار کاربردی برای تازه کارها برگشتیم. در پست قبلی با نام
+ <a href="http://shgn.ir/2019-07-08/Cgroup-linux-kernel.html">آشنایی با ویژگی Cgroup در کرنل لینوکس</a>
+  با مفاهیم <code>Cgroup</code> و <code>namespace</code> و در نهایت با <code>container</code> ها آشنا شدیم.<br />
+اکنون قصد داریم تا با یکی از بهترین برنامه ها مدیریت و کنترل <code>container</code>ها آشنا و آن را نصب کنیم.</p>
+<h1>داکر - Docker</h1>
+<p>داکر مجموعه ای محصولات ارائه زیرساخت به عنوان سرویس <a href="https://en.wikipedia.org/wiki/Platform_as_a_service">PaaS</a> بوده که از مجازی سازی سطح سیستم عامل برای اجرای برنامه ها در قالب کانتینرها استفاده می کند. کانتینرها برای برنامه، کتابخانه ها و تنظیمات مخصوص آن، تهیه و دسته بندی و از یکدیگر جداسازی می شوند. آن ها از طریق کانال های تعریف شده و استاندارد می توانند با یکدیگر ارتباط داشته باشند. تمامی کانتینرها فقط با استفاده از یک کرنل مشترک سیستم عامل هاست، و منابع به مراتب کمتر از یک ماشین مجازی اجرا می شوند. </p>
+<p>داکر دو حالت رایگان و شامل هزینه داشته. برنامه ای که کانتینرها را میزبانی کرده را <code>Docker Engine</code> می نامند.  </p>
+<h2>نصب داکر</h2>
+<p>برای نصب داکر روی <code>debian 10</code> حداقل پیشنیازها فقط داشتن سیستم دبیان۱۰ هست. سپس کافی است تا برنامه های زیر را نصب نمود:</p>
+<pre class="codehilite"><code>$ sudo apt-get update
+
+$ sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg-agent \
+        software-properties-common
+</code></pre>
+
+<p>بعد لازم هست تا کلید <code>gpg</code> سورس لیست داکر را به سیستم اضافه کرد:</p>
+<pre class="codehilite"><code>$ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+</code></pre>
+
+<p>و بعد باید آدرس سورس لیست نصب آن را به سورس لیست های سیستم عامل اضافه نمود:</p>
+<pre class="codehilite"><code>$ sudo add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable&quot;
+</code></pre>
+
+<p>و درنهایت کافی هست تا برای نصب خود <code>docker</code> نیز از دستور زیر استفاده نمود:</p>
+<pre class="codehilite"><code>$ sudo apt-get update
+$ sudo apt-get install docker-ce docker-ce-cli containerd.io
+</code></pre>
+
+<h4>اطمینان از نصب</h4>
+<p>برای اطمنان از نصب صحیح داکر، می توان یک ایمیج مرسوم و معروف آن را اجرا کرد:</p>
+<pre class="codehilite"><code>$ sudo docker run hello-world
+</code></pre>
+
+<p>اگر این ایمیج به درستی دانلود و اجرا شود یک سری اطلاعات را چاپ و خارج می شود. در این حالت یعنی <code>Docker Engine</code> به درستی نصب شده است.</p>
+<p>امیدوارم که این مطلب مفید و کاربردی بوده باشد.</p>
+<h1>نصب docker-compose</h1>
+<p>در پایان یکی از ابزارهای مفی و به شدت کاربردی برای داکر با عنوان <code>docker-compose</code> را معرفی می کنیم. از این ابزار به نوعی می توان به جای <code>docker run</code> استفاده نمود به طوری که پارامترهای آن به صورت مستند و پایدار می ماند. از طرفی به عنوان یک <code>orchestrator</code> ساده نیز شناخته می شود. روش عملکرد آن به این صورت هست که یک فایل ساده با نام <code>docker-compose.yml</code> را در پوشه ای (ترجیحا بانام سرویس مورد نظر) ایجاد کرده و تمامی پارامترهای اجرایی یک یا چند کانتینر به هم مرتبط را داخل فایل قرارداده و در نهایت با اجرای <code>docker-compose</code> تمامی سرویس های آن اجرا خواهند شد.</p>
+<h3>نصب</h3>
+<pre class="codehilite"><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.28.2/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+</code></pre>
+
+<p>و در پایان برای اطمینان می توان دستور زیر را اجرا نمود:</p>
+<pre class="codehilite"><code>$ docker-compose --version
+docker-compose version 1.28.2, build 1110ad01
+</code></pre>
+
+<h3>ایجاد فایل docker-compose</h3>
+<p>برای ایجاد یک سرویس با <code>docker-compose</code> مراحل زیر را اجرا می کنیم:</p>
+<pre class="codehilite"><code>mkdir composetest
+cd composetest
+</code></pre>
+
+<p>سپس یک فایل با نام <code>docker-compose.yml</code> ایجاد کرده و محتویات زیر را داخل قرار می دهیم:</p>
+<pre class="codehilite"><code>version: &quot;3.9&quot;
+services:
+  web:
+    build: .
+    ports:
+      - &quot;5000:5000&quot;
+  redis:
+    image: &quot;redis:alpine&quot;
+</code></pre>
+
+<p>همانطور که مشاهده می کنید دو سرویس <code>web</code> و <code>redis</code> در این فایل ایجاد می شوند. در نهایت برای ایجاد و اجرا کافی هست تا فقط دستور زیر را اجرا کنید:</p>
+<pre class="codehilite"><code>$ docker-compose up
+
+Creating network &quot;composetest_default&quot; with the default driver
+Creating composetest_web_1 ...
+Creating composetest_redis_1 ...
+Creating composetest_web_1
+Creating composetest_redis_1 ... done
+Attaching to composetest_web_1, composetest_redis_1
+web_1    |  * Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
+redis_1  | 1:C 17 Aug 22:11:10.480 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis_1  | 1:C 17 Aug 22:11:10.480 # Redis version=4.0.1, bits=64, commit=00000000, modified=0, pid=1, just started
+redis_1  | 1:C 17 Aug 22:11:10.480 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+web_1    |  * Restarting with stat
+redis_1  | 1:M 17 Aug 22:11:10.483 * Running mode=standalone, port=6379.
+redis_1  | 1:M 17 Aug 22:11:10.483 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+web_1    |  * Debugger is active!
+redis_1  | 1:M 17 Aug 22:11:10.483 # Server initialized
+redis_1  | 1:M 17 Aug 22:11:10.483 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+web_1    |  * Debugger PIN: 330-787-903
+redis_1  | 1:M 17 Aug 22:11:10.483 * Ready to accept connections
+</code></pre>
+
+<p>در پایان سرویس همانطور که در فایل تنظیم شده است از طریق آدرس <code>http://MACHINE_VM_IP:5000</code> در دسترس می باشد.</p>
+<h4>منابع:</h4>
+<ul>
+<li><a href="https://docs.docker.com/engine/install/debian/#install-using-the-repository">Install Docker Engine on Debian</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Docker_(software)">Docker (software)</a></li>
+<li><a href="https://docs.docker.com/compose/install/">Install docker-compose</a></li>
+</ul>
+      </section>
+      <div>
+        برچسب ها:
+      
+        <a href="/tag/docker.html">
+            <span class="label label-default" itemprop="about">docker</span>
+        </a>
+      
+        <a href="/tag/container.html">
+            <span class="label label-default" itemprop="about">container</span>
+        </a>
+      
+        <a href="/tag/virtualization.html">
+            <span class="label label-default" itemprop="about">virtualization</span>
+        </a>
+      
+        <a href="/tag/linux.html">
+            <span class="label label-default" itemprop="about">linux</span>
+        </a>
+      
+    </div>
+    </div>
+
+        </div>
+        <div class="col-md-3">
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        من در stackexchange.com
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-3 col-md-offset-9">
+                            <a href="https://stackexchange.com/users/887576" target="_blank">
+                                <img src="https://stackexchange.com/users/flair/887576.png" width="208" height="58"
+                                     alt="profile for shgnInc on Stack Exchange, a network of free, community-driven Q&A sites"
+                                     title="profile for shgnInc on Stack Exchange, a network of free, community-driven Q&A sites">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            مطالب مهم
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li><a href="https://shgn.ir/2021-03-07/galera-cluster-debian-10.html"
+                                       title="نصب Galer Cluster بر روی debian 10">نصب Galer Cluster بر روی debian 10</a>
+                                </li>
+                                <li><a href="https://shgn.ir/2020-08-15/installing_docker_on_debian.html"
+                                       title="نصب Docker روی Debian 10">نصب Docker روی Debian 10</a></li>
+                                <li><a href="https://shgn.ir/2018-09-05/Mysql-JSON-DataType.html"
+                                       title="معرفی نوع داده JSON در دیتابیس Mysql-Mariadb">معرفی نوع داده JSON در
+                                    دیتابیس Mysql-Mariadb</a></li>
+                                <li><a href="https://shgn.ir/2018-07-23/ssh_automatic_login.html"
+                                       title="لاگین خودکار با SSH">لاگین خودکار با SSH</a></li>
+                                <li><a href="https://shgn.ir/2017-08-16/galera_cluster.html"
+                                       title="نصب Galer Cluster بر روی debian8">نصب Galer Cluster بر روی debian8</a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Linux ISO Images
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                <li><a href="https://shgn.ir/images/gparted-live-1.1.0-1-amd64.iso"
+                                       title="gparted-live-1.1.0-1-amd64">GParted Live CD/USB/HD/PXE Bootable Image</a></li>
+                                <li><a href="https://shgn.ir/images/debian-10.3.0-amd64-xfce-CD-1.iso"
+                                       title="debian-10.3.0-amd64-xfce-CD-1">Debian-10-amd64-xfce-CD</a></li>
+                                <li><a href="https://shgn.ir/images/debian-9.13.0-amd64-xfce-CD-1.iso"
+                                       title="debian-9.13.0-amd64-xfce-CD-1">debian-9-amd64-xfce-CD</a></li>
+                                <li><a href="https://shgn.ir/images/ubuntu-18.04.4-desktop-amd64.iso"
+                                       title="ubuntu-18.04.4-desktop-amd64">Ubuntu Desktop</a></li>
+                                <li><a href="https://shgn.ir/images/ubuntu-18.04.4-live-server-amd64.iso"
+                                       title="ubuntu-18.04.4-live-server-amd64">Ubuntu Server</a></li>
+                                <li><a href="https://shgn.ir/images/CentOS-7-aarch64-Minimal-1908.iso"
+                                       title="CentOS-7-aarch64-Minimal-1908">CentOS-7-aarch64-Minimal-1908</a></li>
+                                <li><a href="https://shgn.ir/images/CentOS-8.2.2004-x86_64-minimal.iso"
+                                       title="CentOS-8.2.2004-x86_64-minimal">CentOS-8.2.2004-x86_64-minimal</a></li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            تازه ترین مطالب
+                        </div>
+                        <div class="panel-body">
+                            <ul>
+                                
+                            </ul>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr/>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                
+                <strong>پیشنهادی های</strong>
+                <ul>
+                    
+                    <li><a href="https://github.com/shgninc">GitHub</a></li>
+                    
+                    <li><a href="https://www.instagram.com/shgninc/">Instagram</a></li>
+                    
+                    <li><a href="http://vasni.ir/">Vasni</a></li>
+                    
+                    <li><a href="https://virgool.io/@shgninc">Virgool</a></li>
+                    
+                    <li><a href="https://twitter.com/shahcheraghian">Twiteer</a></li>
+                    
+                    <li><a href="https://shgn.ir/yii2/">معرفی Yii2</a></li>
+                    
+                </ul>
+                
+            </div>
+            <div class="col-md-6">
+                <strong>دسترسی های ساده</strong>
+                <ul>
+                    <li><a href="/">تمامی پست ها</a></li>
+                    <li><a href="/tags.html">فهرست تگ ها</a></li>
+                    <li><a href="/tag/video.html">ویدیوها</a></li>
+                </ul>
+            </div>
+            <div class="col-md-12">
+                <p class="text-center"><small>https://shgn.ir &copy; 2021</small></p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://shgn.ir/static/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://shgn.ir/static/ProngnRoll/prognroll.min.js"></script>
+<script>
+var jQ_3_5_1 = $.noConflict(true);
+
+    /*Scroll to top when arrow up clicked BEGIN*/
+jQ_3_5_1(window).scroll(function() {
+    var height = jQ_3_5_1(window).scrollTop();
+    if (height > 100) {
+        jQ_3_5_1('#back2Top').fadeIn();
+    } else {
+        jQ_3_5_1('#back2Top').fadeOut();
+    }
+});
+jQ_3_5_1(document).ready(function() {
+    jQ_3_5_1("#back2Top").click(function(event) {
+        event.preventDefault();
+        jQ_3_5_1("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+    });
+});
+ /*Scroll to top when arrow up clicked END*/
+
+/* https://www.jqueryscript.net/other/jQuery-Scroll-Progress-Indicator-For-Any-Containers-ProngnRoll.html */
+
+jQ_3_5_1("body").prognroll({
+  position:"bottom",
+  height:5,
+  color:"#f54905"
+});
+
+
+</script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
+        crossorigin="anonymous"></script>
+<script>
+var $x = jQuery.noConflict();
+
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+
+<a id="back2Top" title="Back to top" href="#">&#10148;</a>
+
+</body>
+</html>
